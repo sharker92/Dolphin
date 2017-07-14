@@ -19,7 +19,7 @@ import com.kontakt.sdk.android.common.profile.IEddystoneNamespace;
 
 import static com.sharkstech.dolphin.R.layout.activity_beacons;
 
-public class Beacons extends AppCompatActivity {
+public class BeaconsActivity extends AppCompatActivity {
 
     private ProximityManager proximityManager;
 
@@ -31,12 +31,12 @@ public class Beacons extends AppCompatActivity {
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         //Mi Clave API
         KontaktSDK.initialize("amwGefsIOPirddbsEWkXusNXUTIEdnAD");
-/*
+
         proximityManager = ProximityManagerFactory.create(this);
         proximityManager.setIBeaconListener(createIBeaconListener());
-        proximityManager.setEddystoneListener(createEddystoneListener());*/
+        proximityManager.setEddystoneListener(createEddystoneListener());
     }
-/*
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -81,5 +81,5 @@ public class Beacons extends AppCompatActivity {
                 Log.i("Sample", "Eddystone discovered: " + eddystone.toString());
             }
         };
-    }*/
+    }
 }

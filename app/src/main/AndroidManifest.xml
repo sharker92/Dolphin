@@ -3,11 +3,12 @@
     package="com.sharkstech.dolphin">
 
     <!-- Permisos Kontakt.io -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- neceario para conectarse a dispositivos emparejados -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- necesario para emparejar dispositivos -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- permite abrir enlases de conexión -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- permite acceder a lainformación de redes -->
     <!-- For Android 6.0+ -->
+    <!--permiso de ubicación necesario para el funcionamiento de la app-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -24,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Beacons" android:parentActivityName="MainActivity">
+        <activity android:name=".BeaconsActivity" android:parentActivityName="MainActivity">
             <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="MainActivity"/>

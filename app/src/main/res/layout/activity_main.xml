@@ -5,49 +5,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sharkstech.dolphin.MainActivity">
+    tools:context="com.sharkstech.dolphin.MainActivity"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
 
     <TextView
         android:id="@+id/textViewPrincipal"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
-        android:layout_marginTop="27dp"
         android:text="Hello World!"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        android:layout_marginTop="26dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/linearLayout"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/linearLayout" />
 
     <Button
         android:id="@+id/buttonBeacons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="Beacons"
         android:textAlignment="center"
+        android:layout_marginTop="55dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPrincipal"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/linearLayout"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="90dp" />
+        app:layout_constraintLeft_toLeftOf="@+id/linearLayout" />
 
     <Button
         android:id="@+id/buttonApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="App"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/buttonBeacons"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="@+id/buttonBeacons"
-        app:layout_constraintHorizontal_bias="1.0"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="38dp"
         app:layout_constraintTop_toBottomOf="@+id/buttonBeacons"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/linearLayout"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="140dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.083" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"></LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
