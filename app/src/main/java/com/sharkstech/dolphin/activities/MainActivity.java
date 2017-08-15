@@ -1,4 +1,4 @@
-package com.sharkstech.dolphin;
+package com.sharkstech.dolphin.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -6,12 +6,14 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import com.sharkstech.dolphin.R;
 import android.widget.Toast;
+import android.support.annotation.NonNull;
+import com.kontakt.sdk.android.common.KontaktSDK;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //inicializacion estatica para proveer la clave API
+        KontaktSDK.initialize(this);
         //Mostrar Icono de la aplicación
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.ic_sharksicon);
