@@ -9,9 +9,22 @@
         android:title="Add Beacon"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/scan_beacon"
+        android:icon="@drawable/ic_play"
+        android:orderInCategory="2"
+        android:title="Scan"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/stop_scan"
+        android:icon="@drawable/ic_stop"
+        android:orderInCategory="2"
+        android:title="Stop"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/list_view"
         android:icon="@drawable/ic_list"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title="List"
         android:visible="false"
         app:showAsAction="ifRoom" />
@@ -19,7 +32,7 @@
     <item
         android:id="@+id/grid_view"
         android:icon="@drawable/ic_grid"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title="Grid"
         app:showAsAction="ifRoom" />
 

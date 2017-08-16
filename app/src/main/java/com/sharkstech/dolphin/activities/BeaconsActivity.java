@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import android.widget.Toast;
 
+import com.kontakt.sdk.android.common.KontaktSDK;
 import com.sharkstech.dolphin.R;
 import com.sharkstech.dolphin.models.Beacons;
 import com.kontakt.sdk.android.ble.manager.ProximityManager;
@@ -43,6 +44,8 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
     // Items en el option menu
     private MenuItem itemListView;
     private MenuItem itemGridView;
+    private MenuItem itemScanBeacon;
+    private MenuItem itemStopScan;
 
     // Variables
     private int counter = 0;
@@ -53,10 +56,11 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(activity_beacons);
+        //inicializacion estatica para proveer la clave API
+        KontaktSDK.initialize(this);
         //Activar flecha de atras
         setupToolbar();
-        //Inicialización dinamica de API
-        // KontaktSDK.initialize("amwGefsIOPirddbsEWkXusNXUTIEdnAD");
+
 
         this.beacons = getAllBeacons();
 
@@ -65,7 +69,6 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         // Adjuntando el mismo método click para ambos
         this.listView.setOnItemClickListener(this);
         this.gridView.setOnItemClickListener(this);
-
 
 
         // Enlazamos con nuestro adaptador personalizado
@@ -84,26 +87,37 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         proximityManager.setIBeaconListener(createIBeaconListener());
         proximityManager.setEddystoneListener(createEddystoneListener());*/
     }
-/*
-    @Override
-    protected void onStart() {
-        super.onStart();
-        startScanning();
+
+    /*
+        @Override
+        protected void onStart() {
+            super.onStart();
+            startScanning();
+        }
+
+        @Override
+        protected void onStop() {
+            proximityManager.stopScanning();
+            super.onStop();
+        }
+
+        @Override
+        protected void onDestroy() {
+            proximityManager.disconnect();
+            proximityManager = null;
+            super.onDestroy();
+        }*/
+////////////////////////////////
+    /*
+    private void startScanning() {
+        proximityManager.connect(new OnServiceReadyListener() {
+            @Override
+            public void onServiceReady() {
+                proximityManager.startScanning();
+            }
+        });
     }
-
-    @Override
-    protected void onStop() {
-        proximityManager.stopScanning();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        proximityManager.disconnect();
-        proximityManager = null;
-        super.onDestroy();
-    }*/
-
+*/
     private void setupToolbar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -120,7 +134,8 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         //Beacons beacon = new Beacons(mac,name,);
 
     }
-    private void clickBeacon (Beacons beacon){
+
+    private void clickBeacon(Beacons beacon) {
         Toast.makeText(this, "Beacon: " + beacon.getName(), Toast.LENGTH_SHORT).show();
     }
 
@@ -133,15 +148,27 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         // Después de inflar, recogemos las referencias a los botones que nos interesan
         this.itemListView = menu.findItem(R.id.list_view);
         this.itemGridView = menu.findItem(R.id.grid_view);
+        this.itemScanBeacon = menu.findItem(R.id.scan_beacon);
+        this.itemStopScan = menu.findItem(R.id.stop_scan);
+
         return true;
     }
+
     //Manejamos eventos click en el menu de opciones
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Eventos para los clicks en los botones del options menu
         switch (item.getItemId()) {
             case R.id.add_beacon:
-                this.addBeacon(new Beacons("AA:7E:AB:33:1C:30","SHK" + (++counter),"utbA","2.0","BEACON_PRO",100,-12,-74,"","",false ));
+                this.addBeacon(new Beacons("AA:7E:AB:33:1C:30", "SHK" + (++counter), "utbA", "2.0", "BEACON_PRO", 100, -12, -74, "", "", false));
+                return true;
+            case R.id.scan_beacon:
+                itemScanBeacon.setVisible(false);
+                itemStopScan.setVisible(true);
+                return true;
+            case R.id.stop_scan:
+                itemScanBeacon.setVisible(true);
+                itemStopScan.setVisible(false);
                 return true;
             case R.id.list_view:
                 this.switchListGridView(this.SWITCH_TO_LIST_VIEW);
@@ -154,6 +181,7 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         }
 
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -180,65 +208,40 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
-////////////////////////////////
-    /*
-    private void startScanning() {
-        proximityManager.connect(new OnServiceReadyListener() {
-            @Override
-            public void onServiceReady() {
-                proximityManager.startScanning();
-            }
-        });
+    private void scanStartStopBeacons(int option){
+        //Metodo para detener e iniciar escaneo de Beacons
+
     }
 
-    private IBeaconListener createIBeaconListener() {
-        return new SimpleIBeaconListener() {
-            @Override
-            public void onIBeaconDiscovered(IBeaconDevice ibeacon, IBeaconRegion region) {
-                Log.i("Sample", "IBeacon discovered: " + ibeacon.toString());
+    private void switchListGridView(int option) {
+        // Método para cambiar entre Grid/List view
+        if (option == SWITCH_TO_LIST_VIEW) {
+            // Si queremos cambiar a list view, y el list view está en modo invisible...
+            if (this.listView.getVisibility() == View.INVISIBLE) {
+                // ... escondemos el grid view, y enseñamos su botón en el menú de opciones
+                this.gridView.setVisibility(View.INVISIBLE);
+                this.itemGridView.setVisible(true);
+                // no olvidamos enseñar el list view, y esconder su botón en el menú de opciones
+                this.listView.setVisibility(View.VISIBLE);
+                this.itemListView.setVisible(false);
             }
-        };
-    }
-
-    private EddystoneListener createEddystoneListener() {
-        return new SimpleEddystoneListener() {
-            @Override
-            public void onEddystoneDiscovered(IEddystoneDevice eddystone, IEddystoneNamespace namespace) {
-                Log.i("Sample", "Eddystone discovered: " + eddystone.toString());
-              //  statusTextEddy.setText(String.format("Eddystone discovered:" + eddystone.toString()));
+        } else if (option == SWITCH_TO_GRID_VIEW) {
+            // Si queremos cambiar a grid view, y el grid view está en modo invisible...
+            if (this.gridView.getVisibility() == View.INVISIBLE) {
+                // ... escondemos el list view, y enseñamos su botón en el menú de opciones
+                this.listView.setVisibility(View.INVISIBLE);
+                this.itemListView.setVisible(true);
+                // no olvidamos enseñar el grid view, y esconder su botón en el menú de opciones
+                this.gridView.setVisibility(View.VISIBLE);
+                this.itemGridView.setVisible(false);
             }
-        };
-
-    }*/
-private void switchListGridView(int option) {
-    // Método para cambiar entre Grid/List view
-    if (option == SWITCH_TO_LIST_VIEW) {
-        // Si queremos cambiar a list view, y el list view está en modo invisible...
-        if (this.listView.getVisibility() == View.INVISIBLE) {
-            // ... escondemos el grid view, y enseñamos su botón en el menú de opciones
-            this.gridView.setVisibility(View.INVISIBLE);
-            this.itemGridView.setVisible(true);
-            // no olvidamos enseñar el list view, y esconder su botón en el menú de opciones
-            this.listView.setVisibility(View.VISIBLE);
-            this.itemListView.setVisible(false);
-        }
-    } else if (option == SWITCH_TO_GRID_VIEW) {
-        // Si queremos cambiar a grid view, y el grid view está en modo invisible...
-        if (this.gridView.getVisibility() == View.INVISIBLE) {
-            // ... escondemos el list view, y enseñamos su botón en el menú de opciones
-            this.listView.setVisibility(View.INVISIBLE);
-            this.itemListView.setVisible(true);
-            // no olvidamos enseñar el grid view, y esconder su botón en el menú de opciones
-            this.gridView.setVisibility(View.VISIBLE);
-            this.itemGridView.setVisible(false);
         }
     }
-}
     // CRUD actions - Get, Add, Delete
 
     private List<Beacons> getAllBeacons() {
         List<Beacons> list = new ArrayList<Beacons>() {{
-            add(new Beacons("AA:7E:AB:33:1C:30","SHK","utbA","2.0","BEACON_PRO",100,-12,-74,"","",false));
+            add(new Beacons("AA:7E:AB:33:1C:30", "SHK", "utbA", "2.0", "BEACON_PRO", 100, -12, -74, "", "", false));
 
         }};
         return list;
