@@ -37,8 +37,8 @@ public class Beacons  {
         batteryLevel = 0;
         txPower = 0;
         rssi = 0;
-        namespace = "";
-        instanceId = "";
+        namespace = "8831a86e2893171d8a23";
+        instanceId = "111111111111";
         shuffled = false;
         distancia = 0;
         distancia2 = 0;

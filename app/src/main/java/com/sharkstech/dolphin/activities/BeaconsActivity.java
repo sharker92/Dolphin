@@ -202,7 +202,6 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
             Toast.makeText(this, "Scanning stopped", Toast.LENGTH_SHORT).show();
         }
     }
-
     //  Listener de perfil seguro
     private SecureProfileListener createSecureProfileListener() {
         return new SecureProfileListener() {
@@ -312,6 +311,7 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         };
     }
 
+
     //Listener de perfil Eddystone
 
     private EddystoneListener createEddystoneListener() {
@@ -320,7 +320,52 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
             public void onEddystoneDiscovered(IEddystoneDevice eddystone, IEddystoneNamespace namespace) {
                 Log.i(TAG, "onEddystoneDiscovered: " + eddystone.toString());
                 Log.i(TAG, "onEddystoneDiscovered2: " + namespace.toString());
+                /*sintaxis para recibir un beacon y verificar si no esta repetido*/
+                if (beaconE != null) {
+                    int a = 0;
+                    int b = 0;
+                   /*verifica si no se esta recibiendo la señal de un beacon ya recibido*/
+                  /*impide leer beacons que no tengan el namespace definido previamente*/
+                    for (int i = 0; i < beaconE.length; ++i) {
+                        if (beaconE[i].getInstanceId().equals(eddystone.getInstanceId()) || !beaconE[i].getNamespace().equals(eddystone.getNamespace())) {
+                            ++a;
+                            i = beaconE.length;
+                        }
+                    }
+                   /*verifica si hay espacio en el array de objetos tipo BEACON*(hay espacio si estan inicializados por el constructor)*/
+                   /*verifica si el elemento recibido es un beacon del modelo deseado*/
+                    if (a == 0) {
+                        for (int i = 0; i < beaconE.length; ++i) {
+                            if (beaconE[i].getInstanceId().equals("111111111111") && beaconE[i].getNamespace().equals(eddystone.getNamespace())) {
+                                b = i;
+                                a = -1;
+                                i = beaconE.length;
+                            } else if (i == beaconE.length - 1 && a == 0) {
+                                Log.i(TAG, "FALTA  ESPACIO PARA: " + eddystone.toString());
+                            }
+                        }
+                    }
+                    if (a == -1) {
+                        beaconE[b] = new Beacons(
+                                eddystone.getAddress(),
+                                eddystone.getName(),
+                                eddystone.getUniqueId(),
+                                eddystone.getFirmwareVersion(),
+                                BEACON_PRO,
+                                eddystone.getBatteryPower(),
+                                eddystone.getTxPower(),
+                                //convertTxPower(iSecureProfile.getTxPower()),
+                                eddystone.getRssi(),
+                                eddystone.getNamespace(),
+                                eddystone.getInstanceId(),
+                                eddystone.isShuffled());
 
+                        beaconE[b].setDistancia3(eddystone.getDistance());
+
+                    /*agrega el elemento a la lista*/
+                        addBeacon(beaconE[b]);
+                }
+                }
             }
 
             @Override
