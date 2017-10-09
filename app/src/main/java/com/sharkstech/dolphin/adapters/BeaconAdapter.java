@@ -51,6 +51,9 @@ public class BeaconAdapter extends BaseAdapter{
             holder = new ViewHolder();
 
             holder.name = (TextView) convertView.findViewById(R.id.textViewName);
+
+            holder.Rssi = (TextView) convertView.findViewById(R.id.textViewRssi);
+            holder.Tx = (TextView) convertView.findViewById(R.id.textViewTx);
             convertView.setTag(holder);
 
         }else {
@@ -61,13 +64,16 @@ public class BeaconAdapter extends BaseAdapter{
 
         final Beacons currentBeacon = getItem(position);
         holder.name.setText(currentBeacon.getName());
-
+        holder.Rssi.setText((String.valueOf(currentBeacon.getRssi())));
+        holder.Tx.setText((String.valueOf(currentBeacon.getTxPower())));
 
         return convertView;
     }
     static class ViewHolder {
         private TextView mac;
         private TextView name;
+        private TextView Rssi;
+        private TextView Tx;
 
     }
 

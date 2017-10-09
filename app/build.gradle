@@ -27,5 +27,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.kontaktio:sdk:3.3.1'
+    compile 'org.altbeacon:android-beacon-library:2.12.2'
+
     testCompile 'junit:junit:4.12'
 }
