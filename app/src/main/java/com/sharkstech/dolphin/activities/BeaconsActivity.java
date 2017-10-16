@@ -72,7 +72,7 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
     private List<Beacons> beacons;
     private Beacons[] beaconO = new Beacons[11];
     private Beacons[] beaconE = new Beacons[11];
-
+    private Beacons[] beaconI = new Beacons[11];
 
     // Items en el option menu
     private MenuItem itemListView;
@@ -173,7 +173,8 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
 
         //Setting up Secure Profile listener
         proximityManager.setSecureProfileListener(createSecureProfileListener());
-        proximityManager.setEddystoneListener(createEddystoneListener());
+        //proximityManager.setEddystoneListener(createEddystoneListener());
+        proximityManager.setIBeaconListener(createIBeaconListener());
 
 
     }
@@ -202,13 +203,14 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
             Toast.makeText(this, "Scanning stopped", Toast.LENGTH_SHORT).show();
         }
     }
+
     //  Listener de perfil seguro
     private SecureProfileListener createSecureProfileListener() {
         return new SecureProfileListener() {
             /*lectura de beacons*/
             @Override
             public void onProfileDiscovered(ISecureProfile iSecureProfile) {
-                Log.i(TAG, "onProfileDiscovered: " + iSecureProfile.toString());
+                //               Log.i(TAG, "onProfileDiscovered: " + iSecureProfile.toString());
 
 /*sintaxis para recibir un beacon y verificar si no esta repetido*/
                 if (beaconO != null) {
@@ -245,16 +247,11 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
                                 iSecureProfile.getBatteryLevel(),
                                 convertTxPower(iSecureProfile.getTxPower()),
                                 iSecureProfile.getRssi(),
-                                iSecureProfile.getNamespace(),
-                                iSecureProfile.getInstanceId(),
                                 iSecureProfile.isShuffled());
 
-                        /*Formula 1*/
-                        beaconO[b].setDistancia(calculateAccuracy(beaconO[b].getTxPower(), beaconO[b].getRssi()));
-                        /*Formula 2*/
-                        beaconO[b].setDistancia2(getRange(beaconO[b].getTxPower(), beaconO[b].getRssi()));
+
                     /*agrega el elemento a la lista*/
-                        addBeacon(beaconO[b]);
+                        //          addBeacon(beaconO[b]);
                     }
                 }
             }
@@ -267,40 +264,38 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
 /*ciclo para cada uno de los beacons leidos actualizados*/
                 for (int i = 0; i < list.size(); ++i) {
                     for (int j = 0; j < beaconO.length; ++j) {
-                        if (list.get(i).getUniqueId() == beaconO[j].getUniqueId()) {
+                        if (list.get(i).getUniqueId().equals(beaconO[j].getUniqueId())) {
                             beaconO[j].setRssi(list.get(i).getRssi());
-                            /*corrimiento para la lista de beacons (la que desplagamos para visualizar)*/
-                            for (int k = 0; k < beacons.size(); ++k) {
-                                if (beacons.get(k).getUniqueId() == beaconO[j].getUniqueId()) {
-                                    updateBeacon(k, beaconO[j]);
+                            /*corrimiento para actualizar la lista de beacons (la que desplagamos para visualizar)*/
+                           /* for (int k = 0; k < beacons.size(); ++k) {
+                                if (beacons.get(k).getUniqueId().equals(beaconO[j].getUniqueId())) {
+                                   updateBeacon(k, beaconO[j]);
                                     k = beacons.size();
                                 }
-                            }
+                            }*/
                             j = beaconO.length;
                         }
                     }
                 }
-
-
             }
 
             /*elimina beacons que pierden conexión*/
             @Override
             public void onProfileLost(ISecureProfile iSecureProfile) {
-                Log.e(TAG, "onProfileLost: " + iSecureProfile.toString());
+                //            Log.e(TAG, "onProfileLost: " + iSecureProfile.toString());
 
 /*elimina de la lista el beacon que perdio conexion*/
-                for (int i = 0; i < beacons.size(); ++i) {
+         /*       for (int i = 0; i < beacons.size(); ++i) {
                     if (beacons.get(i).getUniqueId() == iSecureProfile.getUniqueId()) {
                         deleteBeacon(i);
                         i = beacons.size();
                     }
 
-                }
+                }*/
 
 /*elimina el beacon que perdion conexion del arreglo de objetos de los beacon*/
                 for (int i = 0; i < beaconO.length; ++i) {
-                    if (beaconO[i].getUniqueId() == iSecureProfile.getUniqueId()) {
+                    if (beaconO[i].getUniqueId().equals(iSecureProfile.getUniqueId())) {
                         beaconO[i] = new Beacons();
                         i = beaconO.length;
                     }
@@ -313,13 +308,11 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
 
 
     //Listener de perfil Eddystone
-
     private EddystoneListener createEddystoneListener() {
         return new EddystoneListener() {
             @Override
             public void onEddystoneDiscovered(IEddystoneDevice eddystone, IEddystoneNamespace namespace) {
                 Log.i(TAG, "onEddystoneDiscovered: " + eddystone.toString());
-                Log.i(TAG, "onEddystoneDiscovered2: " + namespace.toString());
                 /*sintaxis para recibir un beacon y verificar si no esta repetido*/
                 if (beaconE != null) {
                     int a = 0;
@@ -348,34 +341,168 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
                     if (a == -1) {
                         beaconE[b] = new Beacons(
                                 eddystone.getAddress(),
-                                eddystone.getName(),
-                                eddystone.getUniqueId(),
-                                eddystone.getFirmwareVersion(),
-                                BEACON_PRO,
-                                eddystone.getBatteryPower(),
+                                eddystone.getNamespace(),
+                                eddystone.getInstanceId(),
+                                eddystone.getUrl(),
                                 eddystone.getTxPower(),
                                 //convertTxPower(iSecureProfile.getTxPower()),
                                 eddystone.getRssi(),
-                                eddystone.getNamespace(),
-                                eddystone.getInstanceId(),
                                 eddystone.isShuffled());
 
-                        beaconE[b].setDistancia3(eddystone.getDistance());
+                        //beaconE[b].setDistancia3(eddystone.getDistance());
 
                     /*agrega el elemento a la lista*/
-                        addBeacon(beaconE[b]);
-                }
+                        //     addBeacon(beaconE[b]);
+                    }
                 }
             }
 
             @Override
             public void onEddystonesUpdated(List<IEddystoneDevice> eddystones, IEddystoneNamespace namespace) {
                 Log.i(TAG, "onEddystonesUpdated: " + eddystones.size());
+                /*ciclo para cada uno de los beacons leidos actualizados*/
+                for (int i = 0; i < eddystones.size(); ++i) {
+                    for (int j = 0; j < beaconE.length; ++j) {
+                        if (beaconE[j].getUniqueId().equals(eddystones.get(i).getUniqueId())) {
+                            beaconE[j].setRssi(eddystones.get(i).getRssi());
+                            /*corrimiento para actualizar la lista de beacons (la que desplagamos para visualizar)*/
+                       /*     for (int k = 0; k < beacons.size(); ++k) {
+                                if (beacons.get(k).getInstanceId().equals(beaconE[j].getInstanceId())) {
+                                   updateBeacon(k, beaconE[j]);
+                                    k = beacons.size();
+                                }
+                            }*/
+                            j = beaconE.length;
+                        }
+                    }
+                }
             }
 
             @Override
             public void onEddystoneLost(IEddystoneDevice eddystone, IEddystoneNamespace namespace) {
                 Log.e(TAG, "onEddystoneLost: " + eddystone.toString());
+                /*elimina de la lista el beacon que perdio conexion*/
+           /*     for (int i = 0; i < beacons.size(); ++i) {
+                    if (beacons.get(i).getInstanceId() == eddystone.getInstanceId()) {
+                        deleteBeacon(i);
+                        i = beacons.size();
+                    }
+
+                }*/
+
+/*elimina el beacon que perdio conexion del arreglo de objetos de los beacon*/
+                for (int i = 0; i < beaconE.length; ++i) {
+                    if (beaconE[i].getInstanceId().equals(eddystone.getInstanceId())) {
+                        beaconE[i] = new Beacons();
+                        i = beaconE.length;
+                    }
+
+                }
+            }
+        };
+    }
+
+    /*Perfil Ibeacon*/
+    private IBeaconListener createIBeaconListener() {
+        return new IBeaconListener() {
+            @Override
+            public void onIBeaconDiscovered(IBeaconDevice iBeacon, IBeaconRegion region) {
+                Log.i(TAG, "onIBeaconDiscovered: " + iBeacon.toString());
+
+                                /*sintaxis para recibir un beacon y verificar si no esta repetido*/
+                if (beaconI != null) {
+                    int a = 0;
+                    int b = 0;
+                   /*verifica si no se esta recibiendo la señal de un beacon ya recibido*/
+                  /*impide leer beacons que no tengan el namespace definido previamente*/
+                    for (int i = 0; i < beaconI.length; ++i) {
+                        if (beaconI[i].getMinor() == (iBeacon.getMinor()) || !beaconI[i].getUUID().equals(iBeacon.getProximityUUID().toString())) {
+                            ++a;
+                            i = beaconI.length;
+                        }
+                    }
+                   /*verifica si hay espacio en el array de objetos tipo BEACON*(hay espacio si estan inicializados por el constructor)*/
+                   /*verifica si el elemento recibido es un beacon del modelo deseado*/
+                    if (a == 0) {
+                        for (int i = 0; i < beaconI.length; ++i) {
+                            if (beaconI[i].getMinor() == 1111 && beaconI[i].getUUID().equals(iBeacon.getProximityUUID().toString())) {
+                                b = i;
+                                a = -1;
+                                i = beaconI.length;
+                            } else if (i == beaconI.length - 1 && a == 0) {
+                                Log.i(TAG, "FALTA  ESPACIO PARA: " + iBeacon.toString());
+                            }
+                        }
+                    }
+                    if (a == -1) {
+                        beaconI[b] = new Beacons(
+                                iBeacon.getAddress(),
+                                iBeacon.getProximityUUID().toString(),
+                                iBeacon.getMajor(),
+                                iBeacon.getMinor(),
+                                iBeacon.getTxPower(),
+                                iBeacon.getRssi(),
+                                iBeacon.isShuffled());
+                        /*Formula 1*/
+                        beaconI[b].setDistancia(calculateAccuracy(beaconI[b].getTxPower(), beaconI[b].getRssi()));
+                        /*Formula 2*/
+                        beaconI[b].setDistancia2(getRange(beaconI[b].getTxPower(), beaconI[b].getRssi()));
+                        beaconI[b].setDistancia3(iBeacon.getDistance());
+
+                    /*agrega el elemento a la lista*/
+                        addBeacon(beaconI[b]);
+                    }
+                }
+            }
+
+            @Override
+            public void onIBeaconsUpdated(List<IBeaconDevice> iBeacons, IBeaconRegion region) {
+                Log.i(TAG, "onIBeaconsUpdated: " + iBeacons.size());
+                                /*ciclo para cada uno de los beacons leidos actualizados*/
+                for (int i = 0; i < iBeacons.size(); ++i) {
+                    for (int j = 0; j < beaconI.length; ++j) {
+                        if (iBeacons.get(i).getMinor() == (beaconI[j].getMinor())) {
+                            beaconI[j].setRssi(iBeacons.get(i).getRssi());
+                        /*Formula 1*/
+                            beaconI[j].setDistancia(calculateAccuracy(beaconI[j].getTxPower(), beaconI[j].getRssi()));
+                        /*Formula 2*/
+                            beaconI[j].setDistancia2(getRange(beaconI[j].getTxPower(), beaconI[j].getRssi()));
+                           /*distancia 3*/
+                            beaconI[j].setDistancia3(iBeacons.get(i).getDistance());
+                            /*corrimiento para actualizar la lista de beacons (la que desplagamos para visualizar)*/
+                            for (int k = 0; k < beacons.size(); ++k) {
+                                if (beacons.get(k).getMinor() == (beaconI[j].getMinor())) {
+
+                                    updateBeacon(k, beaconI[j]);
+                                    k = beacons.size();
+                                }
+                            }
+                            j = beaconI.length;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onIBeaconLost(IBeaconDevice iBeacon, IBeaconRegion region) {
+                Log.e(TAG, "onIBeaconLost: " + iBeacon.toString());
+                /*elimina de la lista el beacon que perdio conexion*/
+                for (int i = 0; i < beacons.size(); ++i) {
+                    if (beacons.get(i).getMinor() == iBeacon.getMinor()) {
+                        deleteBeacon(i);
+                        i = beacons.size();
+                    }
+
+                }
+
+/*elimina el beacon que perdio conexion del arreglo de objetos de los beacon*/
+                for (int i = 0; i < beaconI.length; ++i) {
+                    if (beaconI[i].getMinor() == (iBeacon.getMinor())) {
+                        beaconI[i] = new Beacons();
+                        i = beaconI.length;
+                    }
+
+                }
             }
         };
     }
@@ -412,7 +539,7 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         // Eventos para los clicks en los botones del options menu
         switch (item.getItemId()) {
             case R.id.add_beacon:
-                this.addBeacon(new Beacons("AA:7E:AB:33:1C:30", "SHRKR" + (++counter), "MIO", "2.0", BEACON_PRO, 100, 0, -74, "", "", false));
+                this.addBeacon(new Beacons("CC:CC:CC:CC:CC:CC", "1234567891234567891A", "11111111111a" + (++counter), "www.", 0, 0, false));
                 return true;
             case R.id.scan_beacon:
                 this.scanStartStopBeacons(this.START_SCAN);
@@ -526,6 +653,7 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
 
 
     private void updateBeacon(int l, Beacons beacon) {
+        /*reemplaza valores de la lista*/
         this.beacons.set(l, beacon);
         // Avisamos del cambio en ambos adapters
         this.adapterListView.notifyDataSetChanged();
@@ -536,6 +664,7 @@ public class BeaconsActivity extends AppCompatActivity implements AdapterView.On
         for (int i = 0; i < beaconO.length; ++i) {
             beaconO[i] = new Beacons();
             beaconE[i] = new Beacons();
+            beaconI[i] = new Beacons();
         }
     }
 

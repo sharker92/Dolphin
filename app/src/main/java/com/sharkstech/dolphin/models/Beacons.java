@@ -1,10 +1,6 @@
 package com.sharkstech.dolphin.models;
 
 import com.kontakt.sdk.android.common.model.Model;
-import com.kontakt.sdk.android.common.profile.RemoteBluetoothDevice;
-
-import com.kontakt.sdk.android.ble.device.BeaconDevice;
-
 import static com.kontakt.sdk.android.common.model.Model.BEACON_PRO;
 
 /**
@@ -13,6 +9,7 @@ import static com.kontakt.sdk.android.common.model.Model.BEACON_PRO;
 
 public class Beacons  {
     private String mac;
+    private String address;
     private String name;
     private String uniqueId;
     private String firmware;
@@ -22,6 +19,10 @@ public class Beacons  {
     private int rssi;
     private String namespace;
     private String instanceId;
+    private String UUID;
+    private int major;
+    private int minor;
+    private String url;
     private boolean shuffled;
     private double distancia;
     private double distancia2;
@@ -30,6 +31,7 @@ public class Beacons  {
     public Beacons() {
 
         mac = "AA:AA:AA:AA:AA:AA";
+        address ="BB:BB:BB:BB:BB:BB";
         name = "DEFAULT";
         uniqueId = "DFLT";
         firmware = "0.0";
@@ -39,15 +41,19 @@ public class Beacons  {
         rssi = 0;
         namespace = "8831a86e2893171d8a23";
         instanceId = "111111111111";
+        UUID = "8831a86e-4fa2-4e98-8024-2893171d8a23";
+        major = 16811;
+        minor = 1111;
+        url = "";
         shuffled = false;
         distancia = 0;
         distancia2 = 0;
+        distancia3 = 0;
 
     }
-
+/*perfil seguro*/
     public Beacons(String mac, String name, String uniqueId, String firmware,
-                   Model model, int batteryLevel, int txPower, int rssi,
-                   String namespace, String instanceId, Boolean shuffled) {
+                   Model model, int batteryLevel, int txPower, int rssi, Boolean shuffled) {
 
 
         this.mac = mac;
@@ -58,13 +64,40 @@ public class Beacons  {
         this.batteryLevel = batteryLevel;
         this.txPower = txPower;
         this.rssi = rssi;
-        this.namespace = namespace;
-        this.instanceId = instanceId;
         this.shuffled = shuffled;
 
 
     }
+    /*eddystone*/
+    public Beacons(String address,String namespace, String instanceId, String url, int txPower, int rssi,
+                   Boolean shuffled) {
 
+
+        this.address = address;
+        this.namespace = namespace;
+        this.instanceId = instanceId;
+        this.url = url;
+        this.txPower = txPower;
+        this.rssi = rssi;
+        this.shuffled = shuffled;
+
+
+    }
+    /*iBeacon*/
+    public Beacons(String address, String UUID, int major, int minor, int txPower, int rssi,
+                   Boolean shuffled) {
+
+
+        this.address = address;
+        this.UUID = UUID;
+        this.major = major;
+        this.minor = minor;
+        this.txPower = txPower;
+        this.rssi = rssi;
+        this.shuffled = shuffled;
+
+
+    }
     public String getMac() { return mac; }
     public void setMac(String mac) {
         this.mac = mac;
@@ -103,6 +136,12 @@ public class Beacons  {
     }
     public String getInstanceId() { return instanceId; }
     public void setInstanceId(String instanceId) { this.instanceId = instanceId; }
+    public String getUUID() { return UUID; }
+    public void setUUID(String uuid) { this.UUID = uuid; }
+    public int getMajor() { return major; }
+    public void setMajor(int major) { this.major = major; }
+    public int getMinor() { return minor; }
+    public void setMinor(int minor) { this.minor = minor; }
     public Boolean getShuffled() { return shuffled; }
     public void setShuffled(Boolean shuffled ) { this.shuffled = shuffled;}
 

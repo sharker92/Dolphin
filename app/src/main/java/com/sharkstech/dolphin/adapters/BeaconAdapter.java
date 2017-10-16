@@ -50,10 +50,13 @@ public class BeaconAdapter extends BaseAdapter{
             convertView = LayoutInflater.from(context).inflate(layout, null);
             holder = new ViewHolder();
 
-            holder.name = (TextView) convertView.findViewById(R.id.textViewName);
-
+            holder.minor = (TextView) convertView.findViewById(R.id.textViewName);
             holder.Rssi = (TextView) convertView.findViewById(R.id.textViewRssi);
             holder.Tx = (TextView) convertView.findViewById(R.id.textViewTx);
+            holder.distancia = (TextView) convertView.findViewById(R.id.textViewDst);
+            holder.distancia2 = (TextView) convertView.findViewById(R.id.textViewDst2);
+            holder.distancia3 = (TextView) convertView.findViewById(R.id.textViewDst3);
+
             convertView.setTag(holder);
 
         }else {
@@ -63,18 +66,21 @@ public class BeaconAdapter extends BaseAdapter{
         }
 
         final Beacons currentBeacon = getItem(position);
-        holder.name.setText(currentBeacon.getName());
-        holder.Rssi.setText((String.valueOf(currentBeacon.getRssi())));
-        holder.Tx.setText((String.valueOf(currentBeacon.getTxPower())));
-
+        holder.minor.setText(String.valueOf(currentBeacon.getMinor()));
+        holder.Rssi.setText(String.valueOf(currentBeacon.getRssi()));
+        holder.Tx.setText(String.valueOf(currentBeacon.getTxPower()));
+        holder.distancia.setText(String.valueOf(String.format("%.5g%n",currentBeacon.getDistancia())));
+        holder.distancia2.setText(String.valueOf(String.format("%.5g%n",currentBeacon.getDistancia2())));
+        holder.distancia3.setText(String.valueOf(String.format("%.5g%n",currentBeacon.getDistancia3())));
         return convertView;
     }
     static class ViewHolder {
-        private TextView mac;
-        private TextView name;
+        private TextView minor;
         private TextView Rssi;
         private TextView Tx;
-
+        private TextView distancia;
+        private TextView distancia2;
+        private TextView distancia3;
     }
 
 }

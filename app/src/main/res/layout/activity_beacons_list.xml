@@ -34,7 +34,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/imageViewBeacon"
         android:layout_marginLeft="8dp"
-        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintHorizontal_bias="0.014"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
@@ -46,21 +46,18 @@
         app:layout_constraintTop_toTopOf="@+id/imageViewBeacon"
         android:layout_marginTop="0dp"
         app:layout_constraintLeft_toRightOf="@+id/textViewName"
-        android:layout_marginLeft="16dp" />
+        android:layout_marginLeft="9dp" />
 
     <TextView
-        android:id="@+id/textViewTxP"
+        android:id="@+id/textViewDst"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
         app:layout_constraintBaseline_toBaselineOf="@+id/textViewTx"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/textViewTx"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintHorizontal_bias="0.0" />
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/textViewRssi"
@@ -74,14 +71,27 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewTx" />
 
     <TextView
-        android:id="@+id/textViewRssiI"
+        android:id="@+id/textViewDst2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
         app:layout_constraintBaseline_toBaselineOf="@+id/textViewRssi"
-        app:layout_constraintRight_toRightOf="@+id/textViewTxP"
-        app:layout_constraintLeft_toLeftOf="@+id/textViewTxP"
+        app:layout_constraintRight_toRightOf="@+id/textViewDst"
+        app:layout_constraintLeft_toLeftOf="@+id/textViewDst"
         app:layout_constraintHorizontal_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textViewDst3"
+        android:layout_width="59dp"
+        android:layout_height="17dp"
+        android:text="TextView"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/textViewDst"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewDst"
+        app:layout_constraintHorizontal_bias="0.0"
+        tools:layout_editor_absoluteX="295dp" />
 
 
     app:layout_constraintLeft_toRightOf="@+id/imageViewBeacon"
