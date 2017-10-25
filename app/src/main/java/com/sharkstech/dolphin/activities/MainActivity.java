@@ -19,7 +19,7 @@ import com.kontakt.sdk.android.common.KontaktSDK;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     //Boton
     private Button btnBeacons;
-    private Button btnApp;
+    private Button btnMap;
     private static final int LOCATION_CODE = 100;
 
     @Override
@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setupButtons() {
         //Declarando botones y listeners
         btnBeacons = (Button) findViewById(R.id.buttonBeacons);
-        btnApp = (Button) findViewById(R.id.buttonApp);
+        btnMap = (Button) findViewById(R.id.buttonMap);
 
         btnBeacons.setOnClickListener(this);
-        btnApp.setOnClickListener(this);
+        btnMap.setOnClickListener(this);
     }
 
     //cambio de actividades al presionar botones
@@ -50,7 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.buttonBeacons:
                 checkPermissions();
                 break;
-            case R.id.buttonApp:
+            case R.id.buttonMap:
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(intent);
                 break;
         }
     }

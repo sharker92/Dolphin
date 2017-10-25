@@ -8,14 +8,13 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- permite abrir enlases de conexión -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- permite acceder a lainformación de redes -->
     <!-- For Android 6.0+ -->
-    <!--permiso de ubicación necesario para el funcionamiento de la app-->
+    <!-- permiso de ubicación necesario para el funcionamiento de la app -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_sharksicon"
         android:label="@string/app_name"
-
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity">
@@ -25,19 +24,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.BeaconsActivity" android:parentActivityName=".activities.MainActivity">
+        <activity
+            android:name=".activities.BeaconsActivity"
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activities.MainActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
         </activity>
-        <!--inicializacion estatica para proveer la clave API-->
+        <!-- inicializacion estatica para proveer la clave API -->
         <meta-data
             android:name="kontakt.io.API_KEY"
             android:value="@string/kontakt_io_api_key" />
-        <!--Servicios Kontakt.io-->
+        <!-- Servicios Kontakt.io -->
         <service
             android:name="com.kontakt.sdk.android.ble.service.ProximityService"
             android:exported="false" />
+
+        <activity android:name=".activities.MapActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
